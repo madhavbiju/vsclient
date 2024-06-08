@@ -11,14 +11,15 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:vibration/vibration.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:updater/updater.dart'; // Add the updater package
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+  runApp(AppMain()); // Change MyApp to AppMain
 }
 
-class MyApp extends StatelessWidget {
+class AppMain extends StatelessWidget {
   static final _defaultLightColorScheme =
       ColorScheme.fromSwatch(primarySwatch: Colors.blue);
 
@@ -51,9 +52,77 @@ class MyApp extends StatelessWidget {
           ),
         ),
         themeMode: ThemeMode.system,
-        home: ChatScreen(),
+        home: MyApp(),
       );
     });
+  }
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late UpdaterController controller;
+  late Updater updater;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeUpdater();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  void initializeUpdater() {
+    controller = UpdaterController(
+      listener: (UpdateStatus status) {
+        debugPrint('Listener: $status');
+      },
+      onChecked: (bool isAvailable) {
+        debugPrint('$isAvailable');
+      },
+      progress: (current, total) {
+        // debugPrint('Progress: $current -- $total');
+      },
+      onError: (status) {
+        debugPrint('Error: $status');
+      },
+    );
+
+    updater = Updater(
+      context: context,
+      delay: const Duration(milliseconds: 300),
+      url: 'https://my.api.mockaroo.com/updater.json?key=e91cdf00',
+      titleText: 'Update Available',
+      allowSkip: true,
+      contentText: 'Update your app to the latest version.',
+      callBack: (UpdateModel model) {
+        debugPrint(model.versionName);
+        debugPrint(model.versionCode.toString());
+        debugPrint(model.contentText);
+      },
+      enableResume: true,
+      controller: controller,
+    );
+
+    // Check for update every time the app is opened
+    checkUpdate();
+  }
+
+  checkUpdate() async {
+    bool isAvailable = await updater.check();
+    debugPrint('$isAvailable');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChatScreen(); // Return ChatScreen directly
   }
 }
 
