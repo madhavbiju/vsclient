@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "305398448165",
+    "project_id": "vschat-7d522",
+    "storage_bucket": "vschat-7d522.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305398448165:android:1444fd1005ee297e02ffcc",
+        "android_client_info": {
+          "package_name": "com.madhav.vsclient"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHUuxelVe2P7RZrdonpCXdiXHz0GGghNw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
